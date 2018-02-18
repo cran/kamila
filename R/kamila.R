@@ -156,7 +156,7 @@ psort <- function(xx,pp) {
 # then evaluates at given vector of points
 # pdim is the number of continuous variables used
 # returnFun causes a resampling function to be returned
-#' @importFrom stats bw.nrd0 approxfun
+#' @importFrom stats bw.nrd0 approxfun quantile
 radialKDE <- function(radii,evalPoints,pdim,returnFun=FALSE) {
   MAXDENS <- 1
   # Note using a chosen constant for bw reduces time by about 7%
@@ -300,14 +300,16 @@ radialKDE <- function(radii,evalPoints,pdim,returnFun=FALSE) {
 #' # Generate toy data set with poor quality categorical variables and good
 #' # quality continuous variables.
 #' set.seed(1)
-#' dat <- genMixedData(200, nConVar=2, nCatVar=2, nCatLevels=4, nConWithErr=2,
-#'   nCatWithErr=2, popProportions=c(.5,.5), conErrLev=0.3, catErrLev=0.8)
+#' dat <- genMixedData(200, nConVar = 2, nCatVar = 2, nCatLevels = 4,
+#'   nConWithErr = 2, nCatWithErr = 2, popProportions = c(.5, .5),
+#'   conErrLev = 0.3, catErrLev = 0.8)
 #' catDf <- data.frame(apply(dat$catVars, 2, factor))
 #' conDf <- data.frame(scale(dat$conVars))
 #'
-#' kamRes <- kamila(conDf, catDf, numClust=2, numInit=10)
+#' kamRes <- kamila(conDf, catDf, numClust = 2, numInit = 10)
 #'
 #' table(kamRes$finalMemb, dat$trueID)
+#' @references Foss A, Markatou M; kamila: Clustering Mixed-Type Data in R and Hadoop. Journal of Statistical Software, 83(13). 2018. doi: 10.18637/jss.v083.i13
 
 kamila <- function(
   conVar
@@ -876,7 +878,26 @@ cyclicalCoding <- function(invar) {
 #' @param obj An output object from the kamila function.
 #' @param newData A list of length 2, with first element a data frame of continuous variables, and second element a data frame of categorical factors.
 #' @return An integer vector denoting cluster assignments of the new data points.
-classifyKamila <- function(obj,newData) {
+#' @examples
+#' # Generate toy data set
+#' set.seed(1234)
+#' dat1 <- genMixedData(400, nConVar = 2, nCatVar = 2, nCatLevels = 4,
+#'   nConWithErr = 2, nCatWithErr = 2, popProportions = c(.5,.5),
+#'   conErrLev = 0.2, catErrLev = 0.2)
+#' # Partition the data into training/test set
+#' trainingIds <- sample(nrow(dat1$conVars), size = 300, replace = FALSE)
+#' catTrain <- data.frame(apply(dat1$catVars[trainingIds,], 2, factor))
+#' conTrain <- data.frame(scale(dat1$conVars)[trainingIds,])
+#' catTest <- data.frame(apply(dat1$catVars[-trainingIds,], 2, factor))
+#' conTest <- data.frame(scale(dat1$conVars)[-trainingIds,])
+#' # Run the kamila clustering procedure on the training set
+#' kamilaObj <- kamila(conTrain, catTrain, numClust = 2, numInit = 10)
+#' table(dat1$trueID[trainingIds], kamilaObj$finalMemb)
+#' # Predict membership in the test data set
+#' kamilaPred <- classifyKamila(kamilaObj, list(conTest, catTest))
+#' table(dat1$trueID[-trainingIds], kamilaPred)
+#' @references Foss A, Markatou M; kamila: Clustering Mixed-Type Data in R and Hadoop. Journal of Statistical Software, 83(13). 2018. doi: 10.18637/jss.v083.i13
+classifyKamila <- function(obj, newData) {
   #if (length(newData) == 3) {
   #  cyclicRecoded <- as.data.frame(lapply(newData[[3]],cyclicalCoding))
   #  newCon <- as.data.frame(cbind(newData[[1]],cyclicRecoded))

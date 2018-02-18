@@ -1,7 +1,7 @@
 Package: kamila
 Type: Package
-Version: 0.1.1.1
-Date: 2016-08-18
+Version: 0.1.1.2
+Date: 2018-02-17
 Authors@R: c(
     person("Alexander", "Foss", email = "alexanderhfoss@gmail.com",
            role = c("aut", "cre")),
@@ -22,14 +22,14 @@ Description: Implements methods for clustering mixed-type data,
   brute-force strategy to maximize the cluster separation simultaneously in the
   continuous and categorical variables.
 Depends: R (>= 3.0.0)
-License: GPL-3
+License: GPL-3 | file LICENSE
 URL: https://github.com/ahfoss/kamila
 BugReports: https://github.com/ahfoss/kamila/issues
 Imports: stats, abind, KernSmooth, gtools, Rcpp, mclust, plyr
 LinkingTo: Rcpp
 Suggests: testthat, clustMD, ggplot2, Hmisc
-RoxygenNote: 5.0.1
-Packaged: 2016-08-18 17:46:08 UTC; Alexander
+RoxygenNote: 6.0.1
 NeedsCompilation: yes
+Packaged: 2018-02-17 15:22:24 UTC; ahfoss
 Repository: CRAN
-Date/Publication: 2016-08-19 00:46:49
+Date/Publication: 2018-02-18 04:41:36 UTC
