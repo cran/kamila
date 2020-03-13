@@ -1,7 +1,7 @@
 Package: kamila
 Type: Package
-Version: 0.1.1.3
-Date: 2019-03-14
+Version: 0.1.2
+Date: 2020-03-10
 Authors@R: c(
     person("Alexander", "Foss", email = "alexanderhfoss@gmail.com",
            role = c("aut", "cre")),
@@ -30,8 +30,8 @@ BugReports: https://github.com/ahfoss/kamila/issues
 Imports: stats, abind, KernSmooth, gtools, Rcpp, plyr
 LinkingTo: Rcpp
 Suggests: testthat, clustMD, ggplot2, Hmisc
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.0
 NeedsCompilation: yes
-Packaged: 2019-03-16 03:50:52 UTC; afoss
+Packaged: 2020-03-13 04:36:37 UTC; ahfoss
 Repository: CRAN
-Date/Publication: 2019-03-16 19:50:03 UTC
+Date/Publication: 2020-03-13 07:20:02 UTC

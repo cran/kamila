@@ -1,11 +1,5 @@
 
 
-#library(abind)
-#library(KernSmooth) # for bkde
-#library(gtools) # for rdirichlet
-
-#' @import KernSmooth
-
 #############################
 # compile rcpp functions, including
 # - dptm, used in dptmCpp for calculating weighted Euc distances
@@ -20,6 +14,9 @@
 
 #' @useDynLib kamila
 #' @importFrom Rcpp sourceCpp
+#' @importFrom KernSmooth bkde
+#' @importFrom gtools rdirichlet
+#' @importFrom abind abind
 
 #tryCatch(
 #  sourceCpp("./src/cppfunctions.cpp")
@@ -172,7 +169,7 @@ radialKDE <- function(radii,evalPoints,pdim,returnFun=FALSE) {
   MAXDENS <- 1
   # Note using a chosen constant for bw reduces time by about 7%
   radialBW <- bw.nrd0(radii)
-  radKDE <- KernSmooth::bkde(
+  radKDE <- bkde(
     x = radii
     ,kernel = "normal"
     ,bandwidth = radialBW
@@ -314,8 +311,8 @@ radialKDE <- function(radii,evalPoints,pdim,returnFun=FALSE) {
 #' dat <- genMixedData(200, nConVar = 2, nCatVar = 2, nCatLevels = 4,
 #'   nConWithErr = 2, nCatWithErr = 2, popProportions = c(.5, .5),
 #'   conErrLev = 0.3, catErrLev = 0.8)
-#' catDf <- data.frame(apply(dat$catVars, 2, factor))
-#' conDf <- data.frame(scale(dat$conVars))
+#' catDf <- data.frame(apply(dat$catVars, 2, factor), stringsAsFactors = TRUE)
+#' conDf <- data.frame(scale(dat$conVars), stringsAsFactors = TRUE)
 #'
 #' kamRes <- kamila(conDf, catDf, numClust = 2, numInit = 10)
 #'
@@ -897,10 +894,10 @@ cyclicalCoding <- function(invar) {
 #'   conErrLev = 0.2, catErrLev = 0.2)
 #' # Partition the data into training/test set
 #' trainingIds <- sample(nrow(dat1$conVars), size = 300, replace = FALSE)
-#' catTrain <- data.frame(apply(dat1$catVars[trainingIds,], 2, factor))
-#' conTrain <- data.frame(scale(dat1$conVars)[trainingIds,])
-#' catTest <- data.frame(apply(dat1$catVars[-trainingIds,], 2, factor))
-#' conTest <- data.frame(scale(dat1$conVars)[-trainingIds,])
+#' catTrain <- data.frame(apply(dat1$catVars[trainingIds,], 2, factor), stringsAsFactors = TRUE)
+#' conTrain <- data.frame(scale(dat1$conVars)[trainingIds,], stringsAsFactors = TRUE)
+#' catTest <- data.frame(apply(dat1$catVars[-trainingIds,], 2, factor), stringsAsFactors = TRUE)
+#' conTest <- data.frame(scale(dat1$conVars)[-trainingIds,], stringsAsFactors = TRUE)
 #' # Run the kamila clustering procedure on the training set
 #' kamilaObj <- kamila(conTrain, catTrain, numClust = 2, numInit = 10)
 #' table(dat1$trueID[trainingIds], kamilaObj$finalMemb)
